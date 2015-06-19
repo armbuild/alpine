@@ -39,8 +39,9 @@ conf() {
 
 pack() {
 	local id
-	id=$(tar --numeric-owner -C $ROOTFS -c . | docker import - alpine:$REL)
-
+	tar --numeric-owner -C $ROOTFS -c . > rootfs.tar
+	
+	id=$(cat rootfs.tar | docker import - alpine:$REL)
 	docker tag $id alpine:latest
 	docker run -i -t alpine printf 'alpine:%s with id=%s created!\n' $REL $id
 }
